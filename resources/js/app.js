@@ -1,6 +1,7 @@
 import { createApp, h, resolveComponent } from "vue";
 import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
-import DefaultLayout from "./Layouts/Layout.vue"; 
+import AuthenticatedLayout from "./Layouts/AuthenticatedLayout.vue";
+import GuestLayout from "./Layouts/GuestLayout.vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 createInertiaApp({
@@ -10,7 +11,16 @@ createInertiaApp({
         let page = pages[`./Pages/${name}.vue`].default;
 
         // Set the default layout if not already defined
-        page.layout = page.layout || DefaultLayout;
+        //page.layout = page.layout || AuthenticatedLayout;
+
+
+        // If the page is directly inside `resources/js/Pages/`, use GuestLayout
+        if (["Home", "About"].includes(name) || name.startsWith("Auth/")) {
+            page.layout = page.layout || GuestLayout;
+        } else {
+            page.layout = page.layout || AuthenticatedLayout;
+        }
+
 
         return page;
     },
